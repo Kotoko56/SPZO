@@ -7,6 +7,35 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height = "*" />
+            <RowDefinition Height = "25" />
+        </Grid.RowDefinitions>
 
+        <!-- Main Area -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width = "175" />
+                <ColumnDefinition Width = "*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Burgiert -->
+            <Grid Grid.Column="0">
+                <Rectangle Fill="DarkBlue"/>
+                <TextBlock Margin="5 5 5 5" FontSize="16" Foreground="White"> Hello World!</TextBlock>
+            </Grid>
+
+            <!-- Work Area-->
+            <Grid Grid.Column="1">
+                <Rectangle Fill="Gold"/>
+                <TextBlock Margin="5 5 5 5" FontSize="16" Foreground="Black"> Fuck off!</TextBlock>
+            </Grid>
+        </Grid>
+
+        <!-- Footer -->
+        <Grid Grid.Row="1">
+            <Rectangle Fill="Red"></Rectangle>
+            <TextBlock Margin="5 5 5 5" FontSize="12" Foreground="Black"> Database does not exists yet!</TextBlock>
+        </Grid>
     </Grid>
 </Window>
