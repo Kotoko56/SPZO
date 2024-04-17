@@ -2,9 +2,9 @@
 
 namespace SPZO.View
 {
-    public partial class ManageUsersView : UserControl
+    public partial class PaymentsView : UserControl
     {
-        public ManageUsersView()
+        public PaymentsView()
         {
             InitializeComponent();
         }

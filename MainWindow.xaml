@@ -49,7 +49,7 @@
 
             <!-- Work Area-->
             <Grid Grid.Column="1">
-                <view:ManageUsersView />
+                <view:ClientsView />
             </Grid>
         </Grid>
 

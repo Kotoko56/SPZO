@@ -1,23 +1,12 @@
 ﻿namespace SPZO.Model
 {
-    class Payments
+    class Payments(int paymentID, int userID, string paymentType, int beeHiveNumber, decimal sumOfPayment, DateTime paymentDate)
     {
-        public int PaymentID { get; set; }
-        public int UserID { get; set; }
-        public string PaymentType { get; set; }
-        public int BeeHiveNumber { get; set; }
-        public decimal SumOfPayment { get; set; }
-        public DateTime PaymentDate { get; set; }
-
-        public Payments(int paymentID, int userID, string paymentType, int beeHiveNumber, decimal sumOfPayment, DateTime paymentDate)
-        {
-            PaymentID = paymentID;
-            UserID = userID;
-            PaymentType = paymentType;
-            BeeHiveNumber = beeHiveNumber;
-            SumOfPayment = sumOfPayment;
-            PaymentDate = paymentDate;
-        }
-
+        public int PaymentID { get; set; } = paymentID;
+        public int UserID { get; set; } = userID;
+        public string PaymentType { get; set; } = paymentType;
+        public int BeeHiveNumber { get; set; } = beeHiveNumber;
+        public decimal SumOfPayment { get; set; } = sumOfPayment;
+        public DateTime PaymentDate { get; set; } = paymentDate;
     }
 }
