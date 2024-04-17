@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SPZO"
         xmlns:view="clr-namespace:SPZO.View"
         mc:Ignorable="d"
         Title="SPZO" Height="565" Width="800">
@@ -31,25 +30,22 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
-                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Płatność"/>
+                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Płatność" Command="{Binding UpdateViewCommand}" CommandParameter="Pay"/>
                 </Grid>
                 <Grid Grid.Row="1">
-                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Dodawanie płatnika"/>
+                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Dodawanie klienta" Command="{Binding UpdateViewCommand}" CommandParameter="Client"/>
                 </Grid>
                 <Grid Grid.Row="2">
-                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Modyfikacja danych"/>
                 </Grid>
                 <Grid Grid.Row="3">
-                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Usuwanie płatnika"/>
                 </Grid>
                 <Grid Grid.Row="4">
-                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="For future reference"/>
                 </Grid>
             </Grid>
 
             <!-- Work Area-->
             <Grid Grid.Column="1">
-                <view:ClientsView />
+                <ContentControl Content="{Binding SelectedViewModel}" />
             </Grid>
         </Grid>
 
