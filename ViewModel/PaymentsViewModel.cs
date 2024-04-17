@@ -1,6 +1,6 @@
 ﻿namespace SPZO.ViewModel
 {
-    class PaymentsViewModel
+    public class PaymentsViewModel : BaseViewModel
     {
     }
 }

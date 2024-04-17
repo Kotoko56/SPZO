@@ -1,6 +1,6 @@
 ﻿namespace SPZO.ViewModel
 {
-    class ClientsViewModel
+    public class ClientsViewModel : BaseViewModel
     {
     }
 }

@@ -1,7 +1,8 @@
 ﻿namespace SPZO.ViewModel
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : BaseViewModel
     {
+
 
     }
 }
