@@ -8,6 +8,8 @@ namespace SPZO
         public MainWindow() 
         { 
             InitializeComponent(); 
+
+            DataContext = new MainWindowViewModel();
         }
     }
 }

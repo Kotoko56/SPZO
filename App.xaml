@@ -1,9 +1,18 @@
 ﻿<Application x:Class="SPZO.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:SPZO"
+             xmlns:views="clr-namespace:SPZO.View"
+             xmlns:viewModels="clr-namespace:SPZO.ViewModel"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <DataTemplate DataType="{x:Type viewModels:EmptyStartViewModel}">
+            <views:EmptyStartView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ClientsViewModel}">
+            <views:ClientsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:PaymentsViewModel}">
+            <views:PaymentsView />
+        </DataTemplate>
     </Application.Resources>
 </Application>
