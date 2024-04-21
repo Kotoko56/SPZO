@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="510" d:DesignWidth="800">
+             d:DesignHeight="555" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -23,27 +23,31 @@
 
             <StackPanel Grid.Column="0">
                 <Label Content="ID"/>
-                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0"/>
+                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.ClientID, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Imię"/>
-                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0"/>
+                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.Name, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Nazwisko"/>
-                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0"/>
+                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.Surname, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="PESEL"/>
-                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0"/>
+                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.Pesel, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Adres zamieszkania"/>
-                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0"/>
+                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.HomeAddress, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Nr. Weterynaryjny"/>
-                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0"/>
+                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.VetNumber, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Numer Telefonu"/>
-                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0"/>
+                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.PhoneNumber, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Numer RHD"/>
-                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0"/>
+                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.RhdNumber, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Numer ARiMR"/>
                 <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0"/>
                 <Button Content="Dodaj" Margin="14 14" Padding="5" HorizontalAlignment="Left" Width="250" Height="auto"/>
             </StackPanel>
 
-            <DataGrid Grid.Column="1" >
+            <DataGrid Grid.Column="1" 
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="True"
+                      ItemsSource="{Binding Clients}"
+                      SelectedItem="{Binding SelectedClient}">
                 
             </DataGrid>
 
