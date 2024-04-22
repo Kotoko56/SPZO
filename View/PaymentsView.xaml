@@ -17,7 +17,9 @@
         </Grid>
         <Grid Grid.Row="1">
             <TextBlock Text="Wybierz płatnika" Margin="14 7" Padding="0" FontSize="25" />
-            <ComboBox Margin="14 7" Padding="5" Height="30" Width="500" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+            <ComboBox Margin="14 7" Padding="5" Height="30" Width="500" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                      ItemsSource="{Binding Clients}"
+                      SelectedItem="{Binding SelectedClient}"/>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -34,7 +36,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
-                    <TextBlock Text="Od kogo: " Height="25"/>
+                    <TextBlock Height="25" Text="{Binding SelectedClient.Name , UpdateSourceTrigger=PropertyChanged, StringFormat='Od kogo: {0}'}"/>
                 </Grid>
                 <Grid Grid.Row="1">
                     <TextBlock Text="Zamieszkały: " Height="25"/>
@@ -58,7 +60,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
-                    <TextBlock Text="Członkowskie: " Height="25"/>
+                    <TextBlock Height="25" Text="{Binding GetPrices.Membership, StringFormat='Członkowskie: {0}'}" />
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>

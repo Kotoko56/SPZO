@@ -39,13 +39,15 @@
                 <Label Content="Numer RHD"/>
                 <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.RhdNumber, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Numer ARiMR"/>
-                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0"/>
-                <Button Content="Dodaj" Margin="14 14" Padding="5" HorizontalAlignment="Left" Width="250" Height="auto"/>
+                <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.ArimrNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Content="Zapisz" Margin="14 14 14 4" Padding="5" HorizontalAlignment="Left" Width="250" Height="auto" Command="{Binding SaveCommand}"/>
+                <Button Content="Dodaj" Margin="14 4" Padding="5" HorizontalAlignment="Left" Width="250" Height="auto" Command="{Binding AddClientCommand}"/>
+                <Button Content="Usuń" Margin="14 4" Padding="5" HorizontalAlignment="Left" Width="250" Height="auto" Command="{Binding DeleteClientCommand}"/>
             </StackPanel>
 
             <DataGrid Grid.Column="1" 
                       CanUserAddRows="False"
-                      CanUserDeleteRows="True"
+                      CanUserDeleteRows="False"
                       ItemsSource="{Binding Clients}"
                       SelectedItem="{Binding SelectedClient}">
                 
