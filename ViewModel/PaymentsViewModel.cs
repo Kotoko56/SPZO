@@ -1,7 +1,6 @@
-﻿using SPZO.Model;
+﻿using SPZO.Commands;
+using SPZO.Model;
 using System.Collections.ObjectModel;
-using System.Web;
-using System.Windows.Controls;
 
 namespace SPZO.ViewModel
 {
@@ -33,6 +32,7 @@ namespace SPZO.ViewModel
         {
             Clients = new ObservableCollection<Client>();
             Prices = new ObservableCollection<Prices>();
+            Payments = new ObservableCollection<Payments>();
 
 			Clients.Add(new Client
 			{
@@ -116,6 +116,7 @@ namespace SPZO.ViewModel
             set 
             {
                 totalAmount = value;
+                OnPropertyChanged(nameof(SelectedPrices));
                 OnPropertyChanged(nameof(TotalAmount));
             }
         }
@@ -134,7 +135,6 @@ namespace SPZO.ViewModel
             }
         }
 
-
         public void CalculateTotalFeeAmount()
         {
             
@@ -147,7 +147,6 @@ namespace SPZO.ViewModel
 
             }
         }
-
 
         public string BeeFeeAmount
         {
@@ -162,9 +161,40 @@ namespace SPZO.ViewModel
                 }
                 else
                 {
-                    return $"Error";
+                    return $"";
                 }
             }
+        }
+
+        public ObservableCollection<Payments> Payments { get; set; }
+
+        private Payments payments;
+
+        public Payments Payment
+        {
+            get { return payments; }
+            set
+            {
+                payments = value;
+                OnPropertyChanged(nameof(Payment));
+            }
+
+        }
+
+        public RelayCommands PaymentCommand => new RelayCommands(execute => MakePayment(), canExecute => (selectedClient != null && selectedPrices != null));
+
+        private void MakePayment()
+        {
+            Payments.Add(new Payments()
+            {
+                //musi pobierać z bazy ostatnie id i podawać +1
+                PaymentID = 1,
+                ClientID = selectedClient.ClientID,
+                PaymentType = selectedPrices.PaymentType,
+                BeeHiveNumber = beeAmount,
+                SumOfPayment = totalAmount,
+                PaymentDate = DateTime.Today
+            });
         }
     }
 }

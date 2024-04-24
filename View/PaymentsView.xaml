@@ -29,7 +29,20 @@
                 <ComboBox Margin="14 7" Padding="5" Height="30" Width="375" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                       ItemsSource="{Binding Clients}"
                       SelectedItem="{Binding SelectedClient}"
-                      DisplayMemberPath="Name"/>
+                      DisplayMemberPath="">
+
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding Name}" />
+                                <Run Text=", " />
+                                <Run Text="{Binding Surname}" />
+                                <Run Text=", " />
+                                <Run Text="{Binding HomeAddress}" />
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
             </Grid>
             <Grid Grid.Column="1">
@@ -94,7 +107,7 @@
                         <TextBox x:Name="BeeAmount" Text="{Binding BeeAmount, UpdateSourceTrigger=PropertyChanged}" FontSize="20"/>
                     </Grid>
                     <Grid Grid.Column="1">
-                        <TextBlock Text="{Binding SelectedPrices.BeeHouse, StringFormat='Stawka: {0}'}"/>
+                        <TextBlock Margin="4 0 0 0" Text="{Binding SelectedPrices.BeeHouse, StringFormat='Stawka: {0}'}"/>
                     </Grid>
                     <Grid Grid.Column="2">
                         <TextBlock x:Name="BeeFeeAmount" Text="{Binding BeeFeeAmount, UpdateSourceTrigger=PropertyChanged}"/>
@@ -114,9 +127,8 @@
                     <TextBlock x:Name="TotalAmount" Text="{Binding TotalAmount, UpdateSourceTrigger=PropertyChanged}" Height="25"/>
                 </Grid>
                 <Grid Grid.Row="6">
-                    <Button Content="Płatność" Margin="14 7" Padding="5" />
+                    <Button Content="Płatność" Margin="14 7" Padding="5" Command="{Binding PaymentCommand}"/>
                 </Grid>
-
             </Grid>
         </Grid>
     </Grid>
