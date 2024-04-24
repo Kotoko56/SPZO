@@ -1,5 +1,7 @@
 ﻿using SPZO.Model;
 using System.Collections.ObjectModel;
+using System.Web;
+using System.Windows.Controls;
 
 namespace SPZO.ViewModel
 {
@@ -19,14 +21,13 @@ namespace SPZO.ViewModel
 
         public ObservableCollection<Prices> Prices { get; }
 
-        private Prices getPrices;
+        private Prices selectedPrices;
 
-        public Prices GetPrices
+        public Prices SelectedPrices
         {
-            get { return getPrices; }
-            set { getPrices = value; }
+            get { return selectedPrices; }
+            set { selectedPrices = value; OnPropertyChanged(); }
         }
-
 
         public PaymentsViewModel()
         {
@@ -37,23 +38,133 @@ namespace SPZO.ViewModel
 			{
 				ClientID = 1,
 				Name = "Andrzej",
-                Surname = "A"
+                Surname = "A",
+                Pesel = "15695161651",
+                HomeAddress = "sadgfasedfsdfgsdfg",
+                VetNumber = "654165161651",
+                PhoneNumber = "9854141596818596",
+                RhdNumber = "546+26161511",
+                ArimrNumber = "91516516156156156156156"
 			});
 
             Clients.Add(new Client
             {
                 ClientID = 2,
                 Name = "Roman",
-                Surname = "B"
+                Surname = "B",
+                Pesel = "15695161651",
+                HomeAddress = "sADGADRFGHDFGH",
+                VetNumber = "8273645834",
+                PhoneNumber = "346543256",
+                RhdNumber = "5463456345634576",
+                ArimrNumber = "2346528346"
             });
-             
+            
+            //Hardcoded prices because they don't change
             Prices.Add(new Prices
             {
-                Membership = 35,
+                PaymentType = "Standardowa",
+                BeeHouse = 3m,
+                Membership = 50m,
+                Entry_fee = 0m,
+                Insurance = 15m
             });
 
+            Prices.Add(new Prices
+            {
+                PaymentType = "Bez ubezpieczenia",
+                BeeHouse = 3m,
+                Membership = 35m,
+                Entry_fee = 0m,
+                Insurance = 0m
+            });
+
+            Prices.Add(new Prices
+            {
+                PaymentType = "Tylko członkowskie",
+                BeeHouse = 0m,
+                Membership = 35m,
+                Entry_fee = 0m,
+                Insurance = 0m
+            });
+
+            Prices.Add(new Prices
+            {
+                PaymentType = "Nowy płatnik",
+                BeeHouse = 3m,
+                Membership = 35m,
+                Entry_fee = 50m,
+                Insurance = 15m
+            });
+
+            Prices.Add(new Prices
+            {
+                PaymentType = "Nowy płatnik bez ubezpieczenia",
+                BeeHouse = 3m,
+                Membership = 35m,
+                Entry_fee = 50m,
+                Insurance = 15m
+            });
 
         }
 
-	}
+        private string totalAmount;
+
+        public string TotalAmount
+        {
+            get { return totalAmount; }
+            set 
+            {
+                totalAmount = value;
+                OnPropertyChanged(nameof(TotalAmount));
+            }
+        }
+
+        private string beeAmount;
+
+        public string BeeAmount
+        {
+            get { return beeAmount; }
+            set
+            {
+                beeAmount = value;
+                OnPropertyChanged(nameof(BeeAmount));
+                OnPropertyChanged(nameof(BeeFeeAmount));
+                CalculateTotalFeeAmount();
+            }
+        }
+
+
+        public void CalculateTotalFeeAmount()
+        {
+            
+            if (decimal.TryParse(beeAmount, out decimal _beeAmount))
+            {
+
+                decimal totalFeeAmount = (SelectedPrices.BeeHouse * _beeAmount) + SelectedPrices.Membership + SelectedPrices.Entry_fee + SelectedPrices.Insurance;
+
+                TotalAmount = "Suma: " + totalFeeAmount.ToString();
+
+            }
+        }
+
+
+        public string BeeFeeAmount
+        {
+            get
+            {
+                if (decimal.TryParse(beeAmount, out decimal _beeAmount))
+                {
+
+                    decimal beeFeePayment = SelectedPrices.BeeHouse * _beeAmount;
+
+                    return $"Ulowe: {beeFeePayment}";
+                }
+                else
+                {
+                    return $"Error";
+                }
+            }
+        }
+    }
 }

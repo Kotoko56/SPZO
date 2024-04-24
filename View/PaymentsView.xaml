@@ -3,8 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SPZO.Commands"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:Converters x:Key="Converters" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -16,10 +20,27 @@
             <TextBlock Text="Płatność" Margin="14 7" Padding="0" FontSize="25" />
         </Grid>
         <Grid Grid.Row="1">
-            <TextBlock Text="Wybierz płatnika" Margin="14 7" Padding="0" FontSize="25" />
-            <ComboBox Margin="14 7" Padding="5" Height="30" Width="500" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <TextBlock Text="Wybierz płatnika" Margin="14 7" Padding="0" FontSize="25" />
+                <ComboBox Margin="14 7" Padding="5" Height="30" Width="375" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                       ItemsSource="{Binding Clients}"
-                      SelectedItem="{Binding SelectedClient}"/>
+                      SelectedItem="{Binding SelectedClient}"
+                      DisplayMemberPath="Name"/>
+
+            </Grid>
+            <Grid Grid.Column="1">
+                <TextBlock Text="Wybierz typ płatności" Margin="14 7" Padding="0" FontSize="25" />
+                <ComboBox Margin="14 7" Padding="5" Height="30" Width="375" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                      ItemsSource="{Binding Prices}"
+                      SelectedItem="{Binding SelectedPrices}"
+                      DisplayMemberPath="PaymentType"
+                      />
+
+            </Grid>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -36,16 +57,16 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
-                    <TextBlock Height="25" Text="{Binding SelectedClient.Name , UpdateSourceTrigger=PropertyChanged, StringFormat='Od kogo: {0}'}"/>
+                    <TextBlock Height="25" Text="{Binding SelectedClient, Converter={StaticResource Converters} , UpdateSourceTrigger=PropertyChanged, StringFormat='Od kogo: {0}'}"/>
                 </Grid>
                 <Grid Grid.Row="1">
-                    <TextBlock Text="Zamieszkały: " Height="25"/>
+                    <TextBlock Height="25" Text="{Binding SelectedClient.HomeAddress , UpdateSourceTrigger=PropertyChanged, StringFormat='Zamieszkały: {0}'}" />
                 </Grid>
                 <Grid Grid.Row="2">
-                    <TextBlock Text="Nr. weterynaryjny: " Height="25"/>
+                    <TextBlock Height="25" Text="{Binding SelectedClient.VetNumber , UpdateSourceTrigger=PropertyChanged, StringFormat='Nr. weterynaryjny: {0}'}"/>
                 </Grid>
                 <Grid Grid.Row="3">
-                    <TextBlock Text="Telefon" Height="25"/>
+                    <TextBlock Height="25" Text="{Binding SelectedClient.PhoneNumber , UpdateSourceTrigger=PropertyChanged, StringFormat='Telefon: {0}'}"/>
                 </Grid>
             </Grid>
             <Grid Grid.Column="1">
@@ -60,7 +81,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
-                    <TextBlock Height="25" Text="{Binding GetPrices.Membership, StringFormat='Członkowskie: {0}'}" />
+                    <TextBlock Height="25" Text="{Binding SelectedPrices.Membership, StringFormat='Członkowskie: {0}'}" />
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
@@ -70,27 +91,27 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="0">
-                        <TextBlock Text="Ilość uli: "/>
+                        <TextBox x:Name="BeeAmount" Text="{Binding BeeAmount, UpdateSourceTrigger=PropertyChanged}" FontSize="20"/>
                     </Grid>
                     <Grid Grid.Column="1">
-                        <TextBlock Text="Stawka: "/>
+                        <TextBlock Text="{Binding SelectedPrices.BeeHouse, StringFormat='Stawka: {0}'}"/>
                     </Grid>
                     <Grid Grid.Column="2">
-                        <TextBlock Text="Ulowe: " />
+                        <TextBlock x:Name="BeeFeeAmount" Text="{Binding BeeFeeAmount, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </Grid>
                 
                 <Grid Grid.Row="2">
-                    <TextBlock Text="Wypadki losowe: " Height="25"/>
+                    <TextBlock Text="---" Height="25"/>
                 </Grid>
                 <Grid Grid.Row="3">
-                    <TextBlock Text="OC: " Height="25"/>
+                    <TextBlock Text="{Binding SelectedPrices.Insurance, StringFormat='Ubezpieczenie: {0}'}" Height="25"/>
                 </Grid>
                 <Grid Grid.Row="4">
-                    <TextBlock Text="Wpisowe: " Height="25"/>
+                    <TextBlock Text="{Binding SelectedPrices.Entry_fee, StringFormat='Wpisowe: {0}'}" Height="25"/>
                 </Grid>
                 <Grid Grid.Row="5">
-                    <TextBlock Text="Razem: " Height="25"/>
+                    <TextBlock x:Name="TotalAmount" Text="{Binding TotalAmount, UpdateSourceTrigger=PropertyChanged}" Height="25"/>
                 </Grid>
                 <Grid Grid.Row="6">
                     <Button Content="Płatność" Margin="14 7" Padding="5" />
