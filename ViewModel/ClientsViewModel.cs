@@ -77,7 +77,7 @@ namespace SPZO.ViewModel
 
         }
 
-        public bool AddOrSave()
+        private bool AddOrSave()
         {
             var selectedClientExists = myDbContext.Clients.Find(SelectedClient.ClientID); //Find if client with this id exists in database
             
@@ -85,6 +85,5 @@ namespace SPZO.ViewModel
             else { return false; } //If not add to db
 
         }
-
     }
 }

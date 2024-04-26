@@ -212,7 +212,7 @@ namespace SPZO.ViewModel
                 ClientID = selectedClient.ClientID, //get client id based on selected user
                 PaymentType = selectedPrices.PaymentType, //get payment type based on selected payment type
                 BeeHiveNumber = beeAmount, //gen beeAmount from textbox
-                SumOfPayment = totalFee,
+                SumOfPayment = totalAmount,
                 PaymentDate = DateTime.Today //get Todays Date
 
             };
