@@ -9,7 +9,7 @@ namespace SPZO
         { 
             InitializeComponent(); 
 
-            DataContext = new MainWindowViewModel();
+            DataContext = new MainWindowViewModel(); //Define property DataContext to MainWindowViewModel. Every time, when I switch between viewmodel, it's assigned to MainWindowsViewmodel
         }
     }
 }

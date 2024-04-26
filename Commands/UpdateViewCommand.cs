@@ -5,33 +5,34 @@ namespace SPZO.Commands
 {
     public class UpdateViewCommand : ICommand
     {
-        private MainWindowViewModel _viewModel;
+        //This class inherits ICommand interface. It allows me to change view between EmptyStartView, ClientsView and PaymentsView
+        private MainWindowViewModel viewModel;
 
         public UpdateViewCommand(MainWindowViewModel viewModel)
         {
-            _viewModel = viewModel;
+            this.viewModel = viewModel;
         }
 
         public event EventHandler? CanExecuteChanged;
 
         public bool CanExecute(object? parameter)
         {
-            return true;
+            return true; //Always have to be executable
         }
 
         public void Execute(object? parameter)
         {
-            if (parameter.ToString() == "Pay")
+            if (parameter.ToString() == "Pay") //If additional parameter from xaml is "Pay", switch to PaymentViewModel
             {
-                _viewModel.SelectedViewModel = new PaymentsViewModel();
+                viewModel.SelectedViewModel = new PaymentsViewModel();
             }
-            else if (parameter.ToString() == "Client")
+            else if (parameter.ToString() == "Client") //If additional parameter from xaml is "Client", switch to ClientViewModel
             {
-                _viewModel.SelectedViewModel = new ClientsViewModel();
+                viewModel.SelectedViewModel = new ClientsViewModel();
             }
             else
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException(); //There is no else
             }
         }
     }

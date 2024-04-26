@@ -27,7 +27,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-
+                <!--Button for UpdateViewCommand. More space for more buttons !-->
                 <Grid Grid.Row="0">
                     <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Płatność" Command="{Binding UpdateViewCommand}" CommandParameter="Pay"/>
                 </Grid>
@@ -44,6 +44,7 @@
 
             <!-- Work Area-->
             <Grid Grid.Column="1">
+                
                 <ContentControl Content="{Binding SelectedViewModel}" />
             </Grid>
         </Grid>
@@ -51,7 +52,7 @@
         <!-- Footer -->
         <Grid Grid.Row="1">
             <Rectangle Fill="Red"></Rectangle>
-            <TextBlock Margin="5 5 5 5" FontSize="12" Foreground="Black"> Database does not exists yet!</TextBlock>
+            <TextBlock Margin="5 5 5 5" FontSize="12" Foreground="Black"> Jakub kaczmarski 2024 All Right Reserved </TextBlock>
         </Grid>
     </Grid>
 </Window>

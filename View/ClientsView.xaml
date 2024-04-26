@@ -10,7 +10,7 @@
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-
+        <!-- Section Title -->
         <Grid Grid.Row="0">
             <TextBlock Text="Zarządzanie klientami" Margin="14 7" Padding="0" FontSize="25" />
         </Grid>
@@ -20,7 +20,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-
+            <!-- Stack Panel with all Clients class items-->
             <StackPanel Grid.Column="0">
                 <Label Content="ID"/>
                 <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.ClientID, UpdateSourceTrigger=PropertyChanged}"/>
@@ -40,19 +40,22 @@
                 <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.RhdNumber, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Numer ARiMR"/>
                 <TextBox Width="250" HorizontalAlignment="Left" Margin="14 0" Text="{Binding SelectedClient.ArimrNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                <!--This button add only row to datagrid. Not sends data do database-->
                 <Button Content="Zapisz" Margin="14 14 14 4" Padding="5" HorizontalAlignment="Left" Width="250" Height="auto" Command="{Binding SaveCommand}"/>
+                <!--Ths button saves modified data. If user don't exists in database, record will be added. If exists record vill be updated.-->
                 <Button Content="Dodaj" Margin="14 4" Padding="5" HorizontalAlignment="Left" Width="250" Height="auto" Command="{Binding AddClientCommand}"/>
+                <!--This button delets record from datagrid and database-->
                 <Button Content="Usuń" Margin="14 4" Padding="5" HorizontalAlignment="Left" Width="250" Height="auto" Command="{Binding DeleteClientCommand}"/>
             </StackPanel>
-
+            <!-- Display clients from database-->
+            <!-- SelectedItem says, which client data will be displayed at textboxes in stackpanel -->
             <DataGrid Grid.Column="1" 
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
                       ItemsSource="{Binding Clients}"
                       SelectedItem="{Binding SelectedClient}">
-                
-            </DataGrid>
 
+            </DataGrid>
         </Grid>
     </Grid>
 </UserControl>

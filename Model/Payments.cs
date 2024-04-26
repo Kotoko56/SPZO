@@ -4,6 +4,7 @@ namespace SPZO.Model
 {
     public class Payments
     {
+        //Class Payments
         [Key]
         public int PaymentID { get; set; }
         public int ClientID { get; set; }

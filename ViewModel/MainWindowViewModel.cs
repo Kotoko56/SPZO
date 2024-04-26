@@ -5,7 +5,7 @@ namespace SPZO.ViewModel
 {
     public class MainWindowViewModel : BaseViewModel
     {
-        private BaseViewModel _selectedViewModel = new EmptyStartViewModel();
+        private BaseViewModel _selectedViewModel = new EmptyStartViewModel(); //Define what selectedViewModel is and assign empty on start
 
 		public BaseViewModel SelectedViewModel
 		{

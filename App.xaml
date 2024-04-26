@@ -4,6 +4,7 @@
              xmlns:views="clr-namespace:SPZO.View"
              xmlns:viewModels="clr-namespace:SPZO.ViewModel"
              StartupUri="MainWindow.xaml">
+    <!--Application resources allows me to connect each View with corresponding ViewModel(known as code-behind)-->
     <Application.Resources>
         <DataTemplate DataType="{x:Type viewModels:EmptyStartViewModel}">
             <views:EmptyStartView />
