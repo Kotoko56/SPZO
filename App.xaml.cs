@@ -8,10 +8,12 @@ namespace SPZO
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            DatabaseFacade facadeClients = new DatabaseFacade(new SQLiteDataAccess());
+            SQLiteDataAccess myDbContext = new SQLiteDataAccess();
+
+            DatabaseFacade facadeClients = new DatabaseFacade(myDbContext);
             facadeClients.EnsureCreated();
 
-            DatabaseFacade facadePayments = new DatabaseFacade(new SQLiteDataAccess());
+            DatabaseFacade facadePayments = new DatabaseFacade(myDbContext);
             facadePayments.EnsureCreated();
         }
     }
