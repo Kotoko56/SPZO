@@ -2,6 +2,7 @@
 using SPZO.DataManagement;
 using SPZO.Model;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace SPZO.ViewModel
 {
@@ -129,15 +130,25 @@ namespace SPZO.ViewModel
         {
             get
             {
-                if (decimal.TryParse(beeAmount, out decimal _beeAmount))
+                try
                 {
+                    if (decimal.TryParse(beeAmount, out decimal _beeAmount))
+                    {
 
-                    decimal beeFeePayment = SelectedPrices.BeeHouse * _beeAmount; //idealne miejsce na try catch
+                        decimal beeFeePayment = SelectedPrices.BeeHouse * _beeAmount;
 
-                    return $"Ulowe: {beeFeePayment}";
+                        return $"Ulowe: {beeFeePayment}";
+                    }
+                    else
+                    {
+                        return $"";
+
+                    }
                 }
-                else
+                catch (NullReferenceException)
                 {
+                    MessageBox.Show("Wpierw wybierz rodzaj płatności!");
+                    beeAmount = null;
                     return $"";
                 }
             }
