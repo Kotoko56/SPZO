@@ -2,6 +2,7 @@
 
 namespace SPZO.Model
 {
+    //Class Client
     public class Client
     {
         [Key]

@@ -6,16 +6,18 @@
              xmlns:local="clr-namespace:SPZO.Commands"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <!--Resource Converters allows me to combine Name and Surname into one for one of textboxes-->
     <UserControl.Resources>
         <local:Converters x:Key="Converters" />
     </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        <!--Title-->
         <Grid Grid.Row="0">
             <TextBlock Text="Płatność" Margin="14 7" Padding="0" FontSize="25" />
         </Grid>
@@ -26,11 +28,12 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <TextBlock Text="Wybierz płatnika" Margin="14 7" Padding="0" FontSize="25" />
+                <!--This ComboBox allows me to choose, for which user i fill payment values-->
                 <ComboBox Margin="14 7" Padding="5" Height="30" Width="375" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                       ItemsSource="{Binding Clients}"
                       SelectedItem="{Binding SelectedClient}"
                       DisplayMemberPath="">
-
+                    <!--Combobox ItemTemplate allows me to combine Name, Surname and HomeAddress in Combobox-->
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock>
@@ -46,6 +49,8 @@
 
             </Grid>
             <Grid Grid.Column="1">
+                <!--Combobox for Payment types-->
+                <!--For names DisplayMemberPath can be used, because it's a single item-->
                 <TextBlock Text="Wybierz typ płatności" Margin="14 7" Padding="0" FontSize="25" />
                 <ComboBox Margin="14 7" Padding="5" Height="30" Width="375" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                       ItemsSource="{Binding Prices}"
@@ -70,6 +75,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
+                    <!--Converters allows me to combine Name and Surname-->
                     <TextBlock Height="25" Text="{Binding SelectedClient, Converter={StaticResource Converters} , UpdateSourceTrigger=PropertyChanged, StringFormat='Od kogo: {0}'}"/>
                 </Grid>
                 <Grid Grid.Row="1">
@@ -104,6 +110,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="0">
+                        <!--TextBox for input bee hive amount-->
                         <TextBox x:Name="BeeAmount" Text="{Binding BeeAmount, UpdateSourceTrigger=PropertyChanged}" FontSize="20"/>
                     </Grid>
                     <Grid Grid.Column="1">
@@ -127,6 +134,7 @@
                     <TextBlock x:Name="TotalAmount" Text="{Binding TotalAmount, UpdateSourceTrigger=PropertyChanged}" Height="25"/>
                 </Grid>
                 <Grid Grid.Row="6">
+                    <!--This button sending Payment data to database-->
                     <Button Content="Płatność" Margin="14 7" Padding="5" Command="{Binding PaymentCommand}"/>
                 </Grid>
             </Grid>

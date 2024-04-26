@@ -8,7 +8,7 @@ namespace SPZO.ViewModel
 {
     public class PaymentsViewModel : BaseViewModel
     {
-        public SQLiteDataAccess myDbContext;
+        public SQLiteDataAccess myDbContext; //Define database
         public ObservableCollection<Client> Clients { get; set; }
         private Client selectedClient;
         public Client SelectedClient
@@ -21,6 +21,14 @@ namespace SPZO.ViewModel
             }
         }
 
+        public void GetClientsFromDb()
+        {
+            var clientsFromDb = myDbContext.Clients.ToList();
+
+            Clients = new ObservableCollection<Client>(clientsFromDb);
+        }
+
+
         public ObservableCollection<Prices> Prices { get; }
 
         private Prices selectedPrices;
@@ -28,15 +36,53 @@ namespace SPZO.ViewModel
         public Prices SelectedPrices
         {
             get { return selectedPrices; }
-            set { selectedPrices = value; OnPropertyChanged(); }
+            set { 
+                selectedPrices = value; 
+                OnPropertyChanged(); 
+            }
         }
+
+        public ObservableCollection<Payments> Payments { get; set; }
+
+        private Payments payments;
+
+        public Payments Payment
+        {
+            get { return payments; }
+            set
+            {
+                payments = value;
+            }
+
+        }
+
+        public void GetPaymentsFromDb()
+        {
+            var paymentsFromDb = myDbContext.Payments.ToList();
+
+            Payments = new ObservableCollection<Payments>(paymentsFromDb);
+        }
+
+        public int GetLastPaymentId()
+        {
+            if (myDbContext.Payments.Any())
+            {
+                int lasd = myDbContext.Payments.Max(Payments => Payments.PaymentID);
+
+                Console.WriteLine(lasd);
+
+                return lasd;
+            }
+            else { return 1; }
+        }
+
 
         public PaymentsViewModel()
         {
             myDbContext = new SQLiteDataAccess();
             GetClientsFromDb();
-            GetPaymentsFromDb();
-            Prices = new ObservableCollection<Prices>();
+            GetPaymentsFromDb(); //Get list of made payments
+            Prices = new ObservableCollection<Prices>(); //Prices are hardcoded, so define for ObservableCollection is here.
 
             //Hardcoded prices because they don't change
             Prices.Add(new Prices
@@ -116,7 +162,7 @@ namespace SPZO.ViewModel
         public void CalculateTotalFeeAmount()
         {
 
-            if (decimal.TryParse(beeAmount, out decimal _beeAmount))
+            if (decimal.TryParse(beeAmount, out decimal _beeAmount)) //Calculate total amount based on beeAmount input
             {
 
                 decimal totalFeeAmount = (SelectedPrices.BeeHouse * _beeAmount) + SelectedPrices.Membership + SelectedPrices.Entry_fee + SelectedPrices.Insurance;
@@ -132,7 +178,7 @@ namespace SPZO.ViewModel
             {
                 try
                 {
-                    if (decimal.TryParse(beeAmount, out decimal _beeAmount))
+                    if (decimal.TryParse(beeAmount, out decimal _beeAmount)) //Calculate BeeFee based on beeAmount
                     {
 
                         decimal beeFeePayment = SelectedPrices.BeeHouse * _beeAmount;
@@ -145,7 +191,7 @@ namespace SPZO.ViewModel
 
                     }
                 }
-                catch (NullReferenceException)
+                catch (NullReferenceException) //If user enters beeAmount before selecting payment type message box will be displayed, andd beeAmount deleted
                 {
                     MessageBox.Show("Wpierw wybierz rodzaj płatności!");
                     beeAmount = null;
@@ -154,70 +200,31 @@ namespace SPZO.ViewModel
             }
         }
 
-        public ObservableCollection<Payments> Payments { get; set; }
 
-        private Payments payments;
-
-        public Payments Payment
-        {
-            get { return payments; }
-            set
-            {
-                payments = value;
-            }
-
-        }
-
-        public RelayCommands PaymentCommand => new RelayCommands(execute => MakePayment(), canExecute => (selectedClient != null && selectedPrices != null && beeAmount != null));
+        public RelayCommands PaymentCommand => new RelayCommands(execute => MakePayment(), canExecute => (selectedClient != null && selectedPrices != null && beeAmount != null)); //button is availbe, if user is selected, payment type is selected and beeAmount is different than null. BeeAmount can be 0!
 
         private void MakePayment()
         {
 
             var newPeyment = new Payments()
             {
-                //musi pobierać z bazy ostatnie id i podawać +1
-                PaymentID = GetLastPaymentId() + 1,
-                ClientID = selectedClient.ClientID,
-                PaymentType = selectedPrices.PaymentType,
-                BeeHiveNumber = beeAmount,
+                PaymentID = GetLastPaymentId() + 1, //get last id from payment table and add one
+                ClientID = selectedClient.ClientID, //get client id based on selected user
+                PaymentType = selectedPrices.PaymentType, //get payment type based on selected payment type
+                BeeHiveNumber = beeAmount, //gen beeAmount from textbox
                 SumOfPayment = totalAmount,
-                PaymentDate = DateTime.Today
+                PaymentDate = DateTime.Today //get Todays Date
 
             };
 
-            Payments.Add(newPeyment);
+            Payments.Add(newPeyment); //add to class
 
-            myDbContext.Payments.Add(newPeyment);
+            myDbContext.Payments.Add(newPeyment); //add record to database
 
-            myDbContext.SaveChanges();
+            myDbContext.SaveChanges(); //save changed to database
 
         }
 
-        public void GetClientsFromDb()
-        {
-            var clientsFromDb = myDbContext.Clients.ToList();
 
-            Clients = new ObservableCollection<Client>(clientsFromDb);
-        }
-
-        public void GetPaymentsFromDb()
-        {
-            var paymentsFromDb = myDbContext.Payments.ToList();
-
-            Payments = new ObservableCollection<Payments>(paymentsFromDb);
-        }
-
-        public int GetLastPaymentId()
-        {
-            if (myDbContext.Payments.Any())
-            {
-                int lasd = myDbContext.Payments.Max(Payments => Payments.PaymentID);
-
-                Console.WriteLine(lasd);
-
-                return lasd;
-            }
-            else { return 1; }
-        }
     }
 }
