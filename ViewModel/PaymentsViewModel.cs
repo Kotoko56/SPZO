@@ -1,4 +1,5 @@
 ﻿using SPZO.Commands;
+using SPZO.DataManagement;
 using SPZO.Model;
 using System.Collections.ObjectModel;
 
@@ -6,7 +7,7 @@ namespace SPZO.ViewModel
 {
     public class PaymentsViewModel : BaseViewModel
     {
-        public ObservableCollection<Client> Clients { get; }
+        public ObservableCollection<Client> Clients { get; set;  }
         private Client selectedClient;
         public Client SelectedClient
         {
@@ -30,10 +31,12 @@ namespace SPZO.ViewModel
 
         public PaymentsViewModel()
         {
-            Clients = new ObservableCollection<Client>();
+            //Clients = new ObservableCollection<Client>();
+            GetClientsFromDb();
             Prices = new ObservableCollection<Prices>();
             Payments = new ObservableCollection<Payments>();
 
+            /*
 			Clients.Add(new Client
 			{
 				ClientID = 1,
@@ -59,7 +62,7 @@ namespace SPZO.ViewModel
                 RhdNumber = "5463456345634576",
                 ArimrNumber = "2346528346"
             });
-            
+            */
             //Hardcoded prices because they don't change
             Prices.Add(new Prices
             {
@@ -181,7 +184,7 @@ namespace SPZO.ViewModel
 
         }
 
-        public RelayCommands PaymentCommand => new RelayCommands(execute => MakePayment(), canExecute => (selectedClient != null && selectedPrices != null));
+        public RelayCommands PaymentCommand => new RelayCommands(execute => MakePayment(), canExecute => (selectedClient != null && selectedPrices != null && beeAmount != null));
 
         private void MakePayment()
         {
@@ -195,6 +198,16 @@ namespace SPZO.ViewModel
                 SumOfPayment = totalAmount,
                 PaymentDate = DateTime.Today
             });
+        }
+
+        public void GetClientsFromDb()
+        {
+            using (var dbContext = new SQLiteDataAccess())
+            {
+                var clientsFromDb = dbContext.Clients.ToList();
+
+                Clients = new ObservableCollection<Client>(clientsFromDb);
+            }
         }
     }
 }

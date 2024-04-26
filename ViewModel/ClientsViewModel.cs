@@ -1,14 +1,17 @@
-﻿using SPZO.Commands;
+﻿using Microsoft.EntityFrameworkCore;
+using SPZO.Commands;
+using SPZO.DataManagement;
 using SPZO.Model;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SPZO.ViewModel
 {
     public class ClientsViewModel : BaseViewModel
     {
-
+        private SQLiteDataAccess myDbContext;
         private Client selectedClient;
-
         public Client SelectedClient
         {
             get { return selectedClient; }
@@ -23,13 +26,14 @@ namespace SPZO.ViewModel
 
         public ClientsViewModel()
         {
-            Clients = new ObservableCollection<Client>();
+            myDbContext = new SQLiteDataAccess();
+            GetClientsFromDb();
 
         }
 
         public RelayCommands AddClientCommand => new RelayCommands(execute =>  AddClient());
         public RelayCommands DeleteClientCommand => new RelayCommands(execute => RemoveClient(), canExecute =>  SelectedClient != null);
-        public RelayCommands SaveCommand => new RelayCommands(execute => SaveClient(), canExecute => false);
+        public RelayCommands SaveCommand => new RelayCommands(execute => Save(), canExecute => SelectedClient != null);
         private void AddClient()
         {
             Clients.Add(new Client()
@@ -40,22 +44,47 @@ namespace SPZO.ViewModel
 
         private void RemoveClient()
         {
+            myDbContext.Clients.Remove(SelectedClient);
+
             Clients.Remove(SelectedClient);
+
+            myDbContext.SaveChanges();
         }
 
-        private void SaveClient()
+        private void Save()
         {
-            //saving to db here in future
-            Clients.Add(SelectedClient);
+            if (AddOrSave())
+            {
+                myDbContext.Entry(SelectedClient).CurrentValues.SetValues(SelectedClient);
+
+                myDbContext.SaveChanges();
+            }
+            else
+            {
+                myDbContext.Clients.Add(SelectedClient);
+
+                myDbContext.SaveChanges();
+            }
+
         }
-        /*
-        private bool CanSave()
+
+        public bool AddOrSave()
         {
-            if (SelectedClient != null)
+            var selectedClientExists = myDbContext.Clients.Find(SelectedClient.ClientID);
+            
+            if(selectedClientExists != null)
             {
                 return true;
             }
+            else { return false; }
+
         }
-        */
+
+        private void GetClientsFromDb()
+        {
+            var clientsFromDb = myDbContext.Clients.ToList();
+
+            Clients = new ObservableCollection<Client>(clientsFromDb);
+        }
     }
 }

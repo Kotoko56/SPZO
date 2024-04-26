@@ -1,7 +1,10 @@
-﻿namespace SPZO.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SPZO.Model
 {
     public class Client
     {
+        [Key]
         public int ClientID { get; set; }
         public string? Name { get; set; }
         public string? Surname { get; set; }

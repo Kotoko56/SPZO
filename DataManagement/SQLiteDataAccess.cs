@@ -1,24 +1,18 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using SPZO.Model;
 
 namespace SPZO.DataManagement
 {
-    public class SQLiteDataAccess
+    public class SQLiteDataAccess : DbContext
     {
-        private const string DBCONNECTION = "Data Source = database.db";
-
-        public void InitializeDatabase() 
-        { 
-            using (SqliteConnection connection = new SqliteConnection(DBCONNECTION))
-            {
-                connection.Open();
-
-                string sql_q1 = "CREATE TABLE IF NOT EXISTS Clients (Id INTEGER PRIMARY KEY, Name TEXT, Surname TEXT, PESEL TEXT, HomeAddress TEXT, VetNumer TEXT, PhoneNumer TEXT, RhdNumer TEXT, ArimrNumer TEXT)";
-
-                using(SqliteCommand command = new SqliteCommand(sql_q1, connection)) 
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("Data Source = database.db");
         }
+
+        public DbSet<Client> Clients { get; set; }
+
+        public DbSet<Payments> Payments { get; set; }
     }
 }
