@@ -1,12 +1,15 @@
 ﻿using SPZO.Commands;
+using SPZO.DataManagement;
 using SPZO.Model;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace SPZO.ViewModel
 {
     public class PaymentsViewModel : BaseViewModel
     {
-        public ObservableCollection<Client> Clients { get; }
+        public SQLiteDataAccess myDbContext;
+        public ObservableCollection<Client> Clients { get; set; }
         private Client selectedClient;
         public Client SelectedClient
         {
@@ -30,36 +33,11 @@ namespace SPZO.ViewModel
 
         public PaymentsViewModel()
         {
-            Clients = new ObservableCollection<Client>();
+            myDbContext = new SQLiteDataAccess();
+            GetClientsFromDb();
+            GetPaymentsFromDb();
             Prices = new ObservableCollection<Prices>();
-            Payments = new ObservableCollection<Payments>();
 
-			Clients.Add(new Client
-			{
-				ClientID = 1,
-				Name = "Andrzej",
-                Surname = "A",
-                Pesel = "15695161651",
-                HomeAddress = "sadgfasedfsdfgsdfg",
-                VetNumber = "654165161651",
-                PhoneNumber = "9854141596818596",
-                RhdNumber = "546+26161511",
-                ArimrNumber = "91516516156156156156156"
-			});
-
-            Clients.Add(new Client
-            {
-                ClientID = 2,
-                Name = "Roman",
-                Surname = "B",
-                Pesel = "15695161651",
-                HomeAddress = "sADGADRFGHDFGH",
-                VetNumber = "8273645834",
-                PhoneNumber = "346543256",
-                RhdNumber = "5463456345634576",
-                ArimrNumber = "2346528346"
-            });
-            
             //Hardcoded prices because they don't change
             Prices.Add(new Prices
             {
@@ -113,7 +91,7 @@ namespace SPZO.ViewModel
         public string TotalAmount
         {
             get { return totalAmount; }
-            set 
+            set
             {
                 totalAmount = value;
                 OnPropertyChanged(nameof(SelectedPrices));
@@ -137,7 +115,7 @@ namespace SPZO.ViewModel
 
         public void CalculateTotalFeeAmount()
         {
-            
+
             if (decimal.TryParse(beeAmount, out decimal _beeAmount))
             {
 
@@ -152,15 +130,25 @@ namespace SPZO.ViewModel
         {
             get
             {
-                if (decimal.TryParse(beeAmount, out decimal _beeAmount))
+                try
                 {
+                    if (decimal.TryParse(beeAmount, out decimal _beeAmount))
+                    {
 
-                    decimal beeFeePayment = SelectedPrices.BeeHouse * _beeAmount;
+                        decimal beeFeePayment = SelectedPrices.BeeHouse * _beeAmount;
 
-                    return $"Ulowe: {beeFeePayment}";
+                        return $"Ulowe: {beeFeePayment}";
+                    }
+                    else
+                    {
+                        return $"";
+
+                    }
                 }
-                else
+                catch (NullReferenceException)
                 {
+                    MessageBox.Show("Wpierw wybierz rodzaj płatności!");
+                    beeAmount = null;
                     return $"";
                 }
             }
@@ -176,25 +164,60 @@ namespace SPZO.ViewModel
             set
             {
                 payments = value;
-                OnPropertyChanged(nameof(Payment));
             }
 
         }
 
-        public RelayCommands PaymentCommand => new RelayCommands(execute => MakePayment(), canExecute => (selectedClient != null && selectedPrices != null));
+        public RelayCommands PaymentCommand => new RelayCommands(execute => MakePayment(), canExecute => (selectedClient != null && selectedPrices != null && beeAmount != null));
 
         private void MakePayment()
         {
-            Payments.Add(new Payments()
+
+            var newPeyment = new Payments()
             {
                 //musi pobierać z bazy ostatnie id i podawać +1
-                PaymentID = 1,
+                PaymentID = GetLastPaymentId() + 1,
                 ClientID = selectedClient.ClientID,
                 PaymentType = selectedPrices.PaymentType,
                 BeeHiveNumber = beeAmount,
                 SumOfPayment = totalAmount,
                 PaymentDate = DateTime.Today
-            });
+
+            };
+
+            Payments.Add(newPeyment);
+
+            myDbContext.Payments.Add(newPeyment);
+
+            myDbContext.SaveChanges();
+
+        }
+
+        public void GetClientsFromDb()
+        {
+            var clientsFromDb = myDbContext.Clients.ToList();
+
+            Clients = new ObservableCollection<Client>(clientsFromDb);
+        }
+
+        public void GetPaymentsFromDb()
+        {
+            var paymentsFromDb = myDbContext.Payments.ToList();
+
+            Payments = new ObservableCollection<Payments>(paymentsFromDb);
+        }
+
+        public int GetLastPaymentId()
+        {
+            if (myDbContext.Payments.Any())
+            {
+                int lasd = myDbContext.Payments.Max(Payments => Payments.PaymentID);
+
+                Console.WriteLine(lasd);
+
+                return lasd;
+            }
+            else { return 1; }
         }
     }
 }
