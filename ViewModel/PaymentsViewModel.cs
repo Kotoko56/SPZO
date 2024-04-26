@@ -9,7 +9,7 @@ namespace SPZO.ViewModel
     public class PaymentsViewModel : BaseViewModel
     {
         public SQLiteDataAccess myDbContext;
-        public ObservableCollection<Client> Clients { get; set;  }
+        public ObservableCollection<Client> Clients { get; set; }
         private Client selectedClient;
         public Client SelectedClient
         {
@@ -91,7 +91,7 @@ namespace SPZO.ViewModel
         public string TotalAmount
         {
             get { return totalAmount; }
-            set 
+            set
             {
                 totalAmount = value;
                 OnPropertyChanged(nameof(SelectedPrices));
@@ -115,7 +115,7 @@ namespace SPZO.ViewModel
 
         public void CalculateTotalFeeAmount()
         {
-            
+
             if (decimal.TryParse(beeAmount, out decimal _beeAmount))
             {
 
@@ -194,7 +194,7 @@ namespace SPZO.ViewModel
         }
 
         public void GetClientsFromDb()
-        {           
+        {
             var clientsFromDb = myDbContext.Clients.ToList();
 
             Clients = new ObservableCollection<Client>(clientsFromDb);
@@ -209,7 +209,7 @@ namespace SPZO.ViewModel
 
         public int GetLastPaymentId()
         {
-            if(myDbContext.Payments.Any())
+            if (myDbContext.Payments.Any())
             {
                 int lasd = myDbContext.Payments.Max(Payments => Payments.PaymentID);
 
