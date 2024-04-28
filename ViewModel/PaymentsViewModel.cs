@@ -67,11 +67,9 @@ namespace SPZO.ViewModel
         {
             if (myDbContext.Payments.Any())
             {
-                int lasd = myDbContext.Payments.Max(Payments => Payments.PaymentID);
+                int lastPaymentId = myDbContext.Payments.Max(Payments => Payments.PaymentID);
 
-                Console.WriteLine(lasd);
-
-                return lasd;
+                return lastPaymentId;
             }
             else { return 1; }
         }
