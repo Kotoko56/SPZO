@@ -17,5 +17,8 @@ namespace SPZO.DataManagement
 
         //DBSet for Payments
         public DbSet<Payments> Payments { get; set; }
+
+        //DBSet for Users
+        public DbSet<Users> Users { get; set; }
     }
 }

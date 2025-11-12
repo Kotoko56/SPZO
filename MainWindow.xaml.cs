@@ -1,5 +1,7 @@
 ﻿using SPZO.ViewModel;
 using System.Windows;
+using SPZO.View;
+using SPZO.Services;
 
 namespace SPZO
 {
@@ -9,7 +11,18 @@ namespace SPZO
         { 
             InitializeComponent(); 
 
-            DataContext = new MainWindowViewModel(); //Define property DataContext to MainWindowViewModel. Every time, when I switch between viewmodel, it's assigned to MainWindowsViewmodel
+            DataContext = new MainWindowViewModel();
+        }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Log out global state
+            AuthenticationService.Instance.Logout();
+
+            if (DataContext is MainWindowViewModel vm)
+            {
+                vm.SelectedViewModel = new EmptyStartViewModel();
+            }
         }
     }
 }
