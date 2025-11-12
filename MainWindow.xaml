@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:services="clr-namespace:SPZO.Services"
         mc:Ignorable="d"
         Title="SPZO" Height="635" Width="800">
     <Grid>
@@ -29,16 +30,29 @@
                 </Grid.RowDefinitions>
                 <!--Button for UpdateViewCommand. More space for more buttons !-->
                 <Grid Grid.Row="0">
-                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Płatność" Command="{Binding UpdateViewCommand}" CommandParameter="Pay"/>
+                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Płatność" 
+							Command="{Binding UpdateViewCommand}" 
+							CommandParameter="Pay"
+							IsEnabled="{Binding IsAuthenticated, Source={x:Static services:AuthenticationService.Instance}}"/>
                 </Grid>
                 <Grid Grid.Row="1">
-                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Dodawanie klienta" Command="{Binding UpdateViewCommand}" CommandParameter="Client"/>
+                    <Button Margin="14 7" Padding="5" Width="auto" Height="auto" Content="Dodawanie klienta" 
+							Command="{Binding UpdateViewCommand}" 
+							CommandParameter="Client"
+							IsEnabled="{Binding IsAuthenticated, Source={x:Static services:AuthenticationService.Instance}}"/>
                 </Grid>
                 <Grid Grid.Row="2">
                 </Grid>
                 <Grid Grid.Row="3">
                 </Grid>
+
+                <!-- Login / Logout buttons at bottom of the left panel -->
                 <Grid Grid.Row="4">
+                    <StackPanel VerticalAlignment="Bottom" Margin="14">
+                        <Button x:Name="LogoutButton" Content="Wyloguj" Padding="5" Click="LogoutButton_Click"
+                                IsEnabled="{Binding IsAuthenticated, Source={x:Static services:AuthenticationService.Instance}}"
+                                Margin="0 6 0 0"/>
+                    </StackPanel>
                 </Grid>
             </Grid>
 

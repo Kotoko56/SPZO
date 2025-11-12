@@ -6,6 +6,46 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <!--Just empty view when app starts ... -->
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!-- Główna zawartość EmptyStartView (placeholder) -->
+        <Grid x:Name="ContentRoot" Grid.Row="0">
+            <!-- Możesz tu umieścić dowolną treść, która ma być widoczna pod nakładką logowania -->
+            <TextBlock Text="Ekran startowy" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.6"/>
+        </Grid>
+
+        <!-- Pełnoekranowa nakładka logowania (przechwytuje wszystkie kliknięcia dopóki widoczna) -->
+        <Grid x:Name="LoginOverlay" Background="#80000000" Grid.RowSpan="2">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <!-- Ukryj nakładkę po ustawieniu IsAuthenticated = true -->
+                        <DataTrigger Binding="{Binding IsAuthenticated, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Border Background="White" Padding="20" CornerRadius="6" Width="340" >
+                    <StackPanel>
+                        <TextBlock Text="Logowanie" FontSize="18" Margin="0 0 0 12" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Nazwa użytkownika" Margin="0 0 0 4"/>
+                        <TextBox x:Name="UsernameTextBox" Margin="0 0 0 8" />
+                        <TextBlock Text="Hasło" Margin="0 0 0 4"/>
+                        <PasswordBox x:Name="PasswordBox" Margin="0 0 0 12" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="Zaloguj" Width="80" Margin="0 0 8 0" Click="LoginButton_Click"/>
+                            <Button Content="Anuluj" Width="80" Click="CancelButton_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

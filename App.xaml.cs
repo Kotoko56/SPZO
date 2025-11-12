@@ -16,6 +16,9 @@ namespace SPZO
 
             DatabaseFacade facadePayments = new DatabaseFacade(myDbContext);
             facadePayments.EnsureCreated(); //This check if tables for Payments exists. If not it will be created based on Payment class construction.
+
+            DatabaseFacade facadeUsers = new DatabaseFacade(myDbContext);
+            facadeUsers.EnsureCreated(); //This check if tables for Users exists. If not it will be created based on User class construction.
         }
     }
 }
