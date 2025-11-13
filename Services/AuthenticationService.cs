@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Linq;
 using SPZO.DataManagement;
 using SPZO.Model;
-using Microsoft.EntityFrameworkCore; // added
 
 namespace SPZO.Services
 {
@@ -38,37 +37,63 @@ namespace SPZO.Services
 
         private AuthenticationService()
         {
-            // ensure DB exists and create default user if needed (dev convenience)
+            // ensure DB exists and create/migrate default user if needed
             EnsureDefaultUser();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        // Authenticate against Users table (plaintext comparison with stored UserPassword).
-        // Returns true if authentication succeeded and updates IsAuthenticated/CurrentUser.
+        // Authenticate against Users table using PBKDF2 verification.
         public bool Authenticate(string? username, string? password)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrEmpty(password))
                 return false;
 
             using var db = new SQLiteDataAccess();
-
-            // ensure DB/schema present before querying
             db.Database.EnsureCreated();
 
-            // Query for exact match in Users table
-            var user = db.Users.FirstOrDefault(u => u.UserName == username && u.UserPassword == password);
-            if (user != null)
+            var user = db.Users.FirstOrDefault(u => u.UserName == username);
+            if (user == null)
+                return Fail();
+
+            // Legacy path: if old plaintext field still exists, allow one-time login and migrate.
+            if ((user.PasswordHash == null || user.PasswordHash.Length == 0) && !string.IsNullOrEmpty(user.UserPassword))
             {
-                CurrentUser = user.UserName;
+                if (password == user.UserPassword)
+                {
+                    var (hash, salt, iters) = PasswordHasher.Hash(password);
+                    user.PasswordHash = hash;
+                    user.PasswordSalt = salt;
+                    user.PasswordIterations = iters;
+                    user.UserPassword = null; // clear legacy field
+                    db.SaveChanges();
+                    return Succeed(user.UserName);
+                }
+                return Fail();
+            }
+
+            // Normal PBKDF2 verification
+            if (user.PasswordHash != null && user.PasswordSalt != null && user.PasswordIterations > 0)
+            {
+                var ok = PasswordHasher.Verify(password, user.PasswordHash, user.PasswordSalt, user.PasswordIterations);
+                return ok ? Succeed(user.UserName) : Fail();
+            }
+
+            return Fail();
+
+            bool Succeed(string name)
+            {
+                CurrentUser = name;
                 IsAuthenticated = true;
                 return true;
             }
 
-            // failed
-            CurrentUser = null; 
-            IsAuthenticated = false;
-            return false;
+            bool Fail()
+            {
+                CurrentUser = null;
+                IsAuthenticated = false;
+                return false;
+            }
         }
 
         public void Logout()
@@ -77,20 +102,34 @@ namespace SPZO.Services
             IsAuthenticated = false;
         }
 
-        // Development helper: create a default admin/admin user if Users table empty.
-        // Remove or change for production and use hashed passwords.
+        // Create default admin user with PBKDF2 if DB empty,
+        // or migrate legacy plaintext password to PBKDF2.
         private void EnsureDefaultUser()
         {
             using var db = new SQLiteDataAccess();
-
-            // Ensure database and schema are created where possible
             db.Database.EnsureCreated();
 
-            // If the DB existed but is missing the Users table, EnsureCreated may do nothing.
-            // If you still hit 'no such table' after this, you must run migrations or recreate the DB file.
-            if (!db.Users.Any())
+            var admin = db.Users.FirstOrDefault(u => u.UserName == "admin");
+            if (admin == null)
             {
-                db.Users.Add(new Users { UserName = "admin", UserPassword = "admin" });
+                var (hash, salt, iters) = PasswordHasher.Hash("admin");
+                db.Users.Add(new Users
+                {
+                    UserName = "admin",
+                    PasswordHash = hash,
+                    PasswordSalt = salt,
+                    PasswordIterations = iters
+                });
+                db.SaveChanges();
+            }
+            else if ((admin.PasswordHash == null || admin.PasswordHash.Length == 0) && !string.IsNullOrEmpty(admin.UserPassword))
+            {
+                // migrate old plaintext to PBKDF2 on startup if still present
+                var (hash, salt, iters) = PasswordHasher.Hash(admin.UserPassword);
+                admin.PasswordHash = hash;
+                admin.PasswordSalt = salt;
+                admin.PasswordIterations = iters;
+                admin.UserPassword = null;
                 db.SaveChanges();
             }
         }
